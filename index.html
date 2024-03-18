@@ -185,31 +185,7 @@
         let currentFormId = null;
 
         function login() {
-            var email = document.getElementById("login-email").value;
-            var password = document.getElementById("login-psw").value;
-
-            // AJAX request to the server
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/login");
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        // Successful login
-                        console.log("Login successful");
-                        alert("Login successful!");
-                        window.location.href = "/dashboard"; // Redirect to dashboard page
-                    } else {
-                        // Failed login
-                        console.error("Failed to login:", xhr.responseText);
-                        alert("Failed to login. Please check your credentials and try again.");
-                    }
-                }
-            };
-            xhr.send(JSON.stringify({ email: email, password: password }));
-
-            // Prevent form submission
-            return false;
+            // code for login
         }
 
         function toggleForm(formId) {
@@ -228,107 +204,18 @@
             }
         }
 
-        <!-- Inside the <script> tag -->
-            function signUp() {
-    var email = document.getElementsByName("email")[0].value;
-    var password = document.getElementsByName("psw")[0].value;
-    var repeatPassword = document.getElementsByName("psw-repeat")[0].value;
-
-    // Perform client-side validation
-    if (password !== repeatPassword) {
-        alert("Passwords do not match. Please try again.");
-        return false; // Prevent form submission
-    }
-
-    // Construct form data
-    var formData = new FormData();
-    formData.append('email', email);
-    formData.append('password', password);
-
-    // Fetch request to the server
-    fetch("/signup.php", {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => {
-        if (response.ok) {
-            // Successful signup
-            console.log("Signup successful");
-            alert("Signup successful! You can now login.");
-            // Redirect to login page or display login form
-            // window.location.href = "/login";
-        } else {
-            // Failed signup
-            console.error("Failed to signup:", response.statusText);
-            alert("Failed to signup. Failed signup");
+        function signUp() {
+            // code for signup
         }
-    })
-    .catch(error => {
-        // Handle network errors
-        console.error("Error:", error);
-        alert("Failed to signup network error");
-    });
-
-    // Prevent form submission
-    return false;
-}
-
-
-
 
         function addTopic() {
-            var topicInput = document.getElementById("topic").value;
-            console.log("Topic added:", topicInput);
-            
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/add_topic");
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        console.log("Topic added successfully.");
-                    } else {
-                        console.error("Failed to add topic:", xhr.responseText);
-                    }
-                }
-            };
-            xhr.send(JSON.stringify({ topic: topicInput }));
-            
-            return false; // Prevent form submission
+            // code for add topic
         }
 
         function searchTopics() {
-            var searchInput = document.getElementById("search-input").value;
-            var searchResults = document.getElementById("search-results");
-
-            // Clear previous search results
-            searchResults.innerHTML = "";
-
-            if (searchInput.trim() !== "") {
-                // Send AJAX request to the server
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "/search_topics");
-                xhr.setRequestHeader("Content-Type", "application/json");
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === XMLHttpRequest.DONE) {
-                        if (xhr.status === 200) {
-                            var topics = JSON.parse(xhr.responseText);
-                            topics.forEach(function (topic) {
-                                var li = document.createElement("li");
-                                li.textContent = topic;
-                                searchResults.appendChild(li);
-                            });
-                        } else {
-                            console.error("Failed to search topics:", xhr.responseText);
-                        }
-                    }
-                };
-                xhr.send(JSON.stringify({ query: searchInput }));
-            }
+            // code for searchTopics
         }
-
-
-
+        
     </script>
 </body>
 </html>
