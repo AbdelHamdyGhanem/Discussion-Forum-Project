@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Bar For Topics and their Answers</title>
+    <style>
+
+        body.dark-mode {
+            background-color: #222;
+            color: #fff;
+        }
+
+        .dark-mode-toggle {
+            background-color: #e67e22; /* Orange color */
+            border: none;
+            color: white;
+            padding: 0.8rem 1.5rem; /* Smaller padding */
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px; /* Smaller font size */
+            margin-right: 10px; /* Adjusted margin */
+            cursor: pointer;
+            border-radius: 25px; /* Rounded corners */
+            transition: background-color 0.3s ease;
+        }
+
+        .dark-mode-toggle:hover {
+            background-color: #d35400; /* Darker orange on hover */
+        }
+
+        body.dark-mode .search-container input[type="text"] {
+            background-color: #333; /* Darker background color for input field */
+            color: #fff; /* Text color in input field */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Light shadow */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center horizontally */
+            justify-content: center; /* Center vertically */
+            min-height: 100vh; /* Full viewport height */
+            background-color: #f5f5f5; /* Light gray background */
+        }
+        .header {
+            background-color: #2c3e50; /* Blue color */
+            color: #fff;
+            padding: 1rem;
+            display: flex;
+            align-items: center; /* Center vertically */
+            width: 100%; /* Ensure full width */
+            position: fixed; /* Position at the top */
+            top: 0;
+            z-index: 1000; /* Ensure header stays on top of other elements */
+        }
+        .search-container {
+            width: 50%;
+            margin-left: 10%; /* Move search bar to the center */
+            margin-right: 20%; /* Move search bar to the center */
+            flex-grow: 1; /* Allow the search container to grow */
+        }
+        .search-container input[type="text"] {
+            width: 70%; /* Adjust the width to your preference */
+            padding: 1rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 25px;
+            background-color: #fff; /* White background */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow */
+            transition: box-shadow 0.3s ease;
+        }
+        .search-container input[type="text"]:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Slightly darker shadow on focus */
+        }
+
+        .buttons-container {
+            display: flex;
+            align-items: center;
+        }
+        .button {
+            background-color: #e67e22; /* Orange color */
+            border: none;
+            color: white;
+            padding: 0.8rem 1.5rem; /* Smaller padding */
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px; /* Smaller font size */
+            margin-left: 10px; /* Adjusted margin */
+            cursor: pointer;
+            border-radius: 25px; /* Rounded corners */
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #d35400; /* Darker orange on hover */
+        }
+        .form-container {
+            display: none;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Light shadow */
+            margin-top: 20px; /* Add margin to separate from the button */
+            width: 100%;
+            max-width: 400px;
+        }
+        .form-container h2 {
+            color: #333; /* Dark text color */
+            margin-bottom: 20px; /* Spacing below heading */
+        }
+        .form-container label {
+            display: block;
+            margin-bottom: 5px; /* Spacing below labels */
+            color: #555; /* Label color */
+        }
+        .form-container input[type="text"],
+        .form-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px; /* Spacing below inputs */
+            border: 1px solid #ccc; /* Light border */
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        .form-container input[type="text"]:focus,
+        .form-container input[type="password"]:focus {
+            outline: none;
+            border-color: #3498db; /* Highlight border on focus */
+        }
+        .form-container button[type="submit"],
+        .form-container button[type="button"] {
+            width: 48%; /* Make buttons same width */
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .form-container button[type="submit"] {
+            background-color: #2ecc71; /* Green color */
+            color: #fff; /* White text color */
+        }
+        .form-container button[type="submit"]:hover {
+            background-color: #27ae60; /* Darker green on hover */
+        }
+        .form-container button[type="button"] {
+            background-color: #e74c3c; /* Red color */
+            color: #fff; /* White text color */
+        }
+        .form-container button[type="button"]:hover {
+            background-color: #c0392b; /* Darker red on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">Dark Mode</button>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search for topics">
+        </div>
+        <div class="buttons-container">
+            <button class="button" onclick="toggleForm('loginForm')">Login</button>
+            <button class="button" onclick="toggleForm('signupForm')">Sign Up</button>
+        </div>
+    </div>
+
+    <div id="loginForm" class="form-container">
+        <form id="loginFormContent" onsubmit="return login()">
+            <h2>Login</h2>
+            <label for="login-email">Email</label>
+            <input type="text" placeholder="Enter Email" name="login-email" required>
+            <label for="login-psw">Password</label>
+            <input type="password" placeholder="Enter Password" name="login-psw" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <div id="signupForm" class="form-container">
+        <form id="signupFormContent" onsubmit="return signUp()">
+            <h2>Sign Up</h2>
+            <label for="email">Email</label>
+            <input type="text" placeholder="Enter Email" name="email" required>
+            <label for="psw">Password</label>
+            <input type="password" placeholder="Enter Password" name="psw" required>
+            <label for="psw-repeat">Repeat Password</label>
+            <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+            <label>
+                <input type="checkbox" checked="checked" name="remember"> Remember me
+            </label>
+            <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
+            <div class="clearfix">
+                <button type="button" onclick="toggleForm('signupForm')" class="cancelbtn">Cancel</button>
+                <button type="submit" class="signupbtn">Sign Up</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="topicForm" class="form-container">
+        <form id="addTopicForm" onsubmit="return addTopic()">
+            <h2>Create Topic</h2>
+            <label for="topic">Topic</label>
+            <input type="text" id="topic" name="topic" required>
+            <button type="submit">Add</button>
+        </form>
+    </div>
+
+    <button class="button" onclick="toggleForm('topicForm')" style="margin-top: 20px;">Create Topic</button>
+
+    <script>
+        let currentFormId = null;
+
+        function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        }
+
+        function login() {
+            var email = document.getElementById("login-email").value;
+            var password = document.getElementById("login-psw").value;
+
+            // AJAX request to the server
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/login");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Successful login
+                        console.log("Login successful");
+                        alert("Login successful!");
+                        window.location.href = "/dashboard"; // Redirect to dashboard page
+                    } else {
+                        // Failed login
+                        console.error("Failed to login:", xhr.responseText);
+                        alert("Failed to login. Please check your credentials and try again.");
+                    }
+                }
+            };
+            xhr.send(JSON.stringify({ email: email, password: password }));
+
+            // Prevent form submission
+            return false;
+        }
+
+        function toggleForm(formId) {
+            if (currentFormId === formId) {
+                // Close the form
+                document.getElementById(formId).style.display = "none";
+                currentFormId = null;
+            } else {
+                // Close the currently open form, if any
+                if (currentFormId !== null) {
+                    document.getElementById(currentFormId).style.display = "none";
+                }
+                // Open the selected form
+                document.getElementById(formId).style.display = "block";
+                currentFormId = formId;
+            }
+        }
+
+        <!-- Inside the <script> tag -->
+            function signUp() {
+    var email = document.getElementsByName("email")[0].value;
+    var password = document.getElementsByName("psw")[0].value;
+    var repeatPassword = document.getElementsByName("psw-repeat")[0].value;
+
+    // Perform client-side validation
+    if (password !== repeatPassword) {
+        alert("Passwords do not match. Please try again.");
+        return false; // Prevent form submission
+    }
+
+    // Construct form data
+    var formData = new FormData();
+    formData.append('email', email);
+    formData.append('password', password);
+
+    // Fetch request to the server
+    fetch("/signup.php", {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            // Successful signup
+            console.log("Signup successful");
+            alert("Signup successful! You can now login.");
+            // Redirect to login page or display login form
+            // window.location.href = "/login";
+        } else {
+            // Failed signup
+            console.error("Failed to signup:", response.statusText);
+            alert("Failed to signup. Failed signup");
+        }
+    })
+    .catch(error => {
+        // Handle network errors
+        console.error("Error:", error);
+        alert("Failed to signup network error");
+    });
+
+    // Prevent form submission
+    return false;
+}
+
+
+
+
+        function addTopic() {
+            var topicInput = document.getElementById("topic").value;
+            console.log("Topic added:", topicInput);
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/add_topic");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        console.log("Topic added successfully.");
+                    } else {
+                        console.error("Failed to add topic:", xhr.responseText);
+                    }
+                }
+            };
+            xhr.send(JSON.stringify({ topic: topicInput }));
+            
+            return false; // Prevent form submission
+        }
+
+        function searchTopics() {
+            var searchInput = document.getElementById("search-input").value;
+            var searchResults = document.getElementById("search-results");
+
+            // Clear previous search results
+            searchResults.innerHTML = "";
+
+            if (searchInput.trim() !== "") {
+                // Send AJAX request to the server
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/search_topics");
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            var topics = JSON.parse(xhr.responseText);
+                            topics.forEach(function (topic) {
+                                var li = document.createElement("li");
+                                li.textContent = topic;
+                                searchResults.appendChild(li);
+                            });
+                        } else {
+                            console.error("Failed to search topics:", xhr.responseText);
+                        }
+                    }
+                };
+                xhr.send(JSON.stringify({ query: searchInput }));
+            }
+        }
+
+
+
+    </script>
+</body>
+</html>
