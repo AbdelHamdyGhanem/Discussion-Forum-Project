@@ -1,9 +1,18 @@
-from flask import Flask, jsonify, request, make_response, session
+#!/usr/bin/env python3
+import sys
+from flask import Flask, jsonify, abort, request, make_response, session
 from flask_restful import Resource, Api, reqparse, abort
-import mysql.connector
+from flask_session import Session
+import json
+from ldap3 import Server, Connection, ALL
+from ldap3.core.exceptions import *
+import ssl #include ssl libraries
+import cgi
+import cgitb
+import pymysql
 import settings
 
-db_connection = mysql.connector.connect(
+db_connection = pymysql.connect(
     host=settings.DB_HOST,
     user=settings.DB_USER,
     password=settings.DB_PASSWORD,
@@ -13,6 +22,8 @@ db_connection = mysql.connector.connect(
 app = Flask(__name__)
 api = Api(app)
 
+# Example curl command for testing Login:
+# curl -i -H "Content-Type: application/json" -X POST -d '{"email": "example@example.com", "password": "example"}' -c cookie-jar -k http://localhost:5000/login
 class Login(Resource):
     def post(self):
         if not request.json:
@@ -40,6 +51,8 @@ class Login(Resource):
 
 api.add_resource(Login, '/login')
 
+# Example curl command for testing Logout:
+# curl -i -X POST -b cookie-jar -k http://localhost:5000/logout
 class Logout(Resource):
     def post(self):
         if 'email' in session:
@@ -50,6 +63,14 @@ class Logout(Resource):
 
 api.add_resource(Logout, '/logout')
 
+# Example curl command for post topic:
+# curl -i -H "Content-Type: application/json" -X POST -d '{"user_id": 1, "topic_title": "New Topic", "content": "Content of the new topic"}' -b cookie-jar -k http://localhost:5000/topics
+
+# Example curl command for get topic:
+# curl -i -X GET -b cookie-jar -k http://localhost:5000/topics
+
+# Example curl command for delete topic:
+# curl -i -X DELETE -b cookie-jar -k http://localhost:5000/topics/1
 class Topic(Resource):
     def post(self):
         parser = reqparse.RequestParser()
@@ -80,6 +101,14 @@ class Topic(Resource):
     
 api.add_resource(Topic, '/topics')
 
+# Example curl command for post answer:
+# curl -i -H "Content-Type: application/json" -X POST -d '{"user_id": 1, "topic_id": 1, "content": "Content of the answer"}' -b cookie-jar -k http://localhost:5000/answers
+
+# Example curl command for get answer:
+# curl -i -X GET -b cookie-jar -k http://localhost:5000/answers/1
+
+# Example curl command for delete answer:
+# curl -i -X DELETE -b cookie-jar -k http://localhost:5000/answers/1
 class Answer(Resource):
     def post(self):
         parser = reqparse.RequestParser()
