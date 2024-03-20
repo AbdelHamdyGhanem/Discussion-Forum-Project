@@ -12,6 +12,7 @@ END //
 
 DELIMITER ;
 
+/*
 -- table for topic
 CREATE TABLE topics (
     topic_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -20,3 +21,4 @@ CREATE TABLE topics (
     content TEXT,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
+*/
