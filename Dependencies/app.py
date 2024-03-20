@@ -10,7 +10,7 @@ import ssl #include ssl libraries
 import cgi
 import cgitb
 import pymysql
-import settings
+import Dependencies.settings as settings
 
 db_connection = pymysql.connect(
     host=settings.DB_HOST,

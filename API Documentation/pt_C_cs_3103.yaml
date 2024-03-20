@@ -1,0 +1,184 @@
+openapi: 3.0.0
+info:
+  title: Question and Answer Website API
+  description: API for a question and answer website similar to Quora
+  version: 1.0.0
+servers:
+  - url: https://project3103.com/api/v1
+paths:
+  /login:
+    post:
+      summary: Authenticate User
+      operationId: authenticateUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '201':
+          description: Success
+        '403':
+          description: Access denied
+  /logout:
+    post:
+      summary: Log out User
+      operationId: logoutUser
+      responses:
+        '200':
+          description: Logged out successfully
+        '400':
+          description: No user logged in
+  /topics:
+    post:
+      summary: Create Topic
+      operationId: createTopic
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Topic'
+      responses:
+        '201':
+          description: Topic Created
+        '400':
+          description: Bad Request
+    get:
+      summary: Search Topics
+      operationId: searchTopics
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Retrieved Topics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  topics:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Topic'
+  /topics/{topicId}:
+    delete:
+      summary: Delete Topic
+      operationId: deleteTopic
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          description: ID of Topic
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Topic deleted
+    get:
+      summary: Get Topic Answers
+      operationId: getTopicAnswers
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          description: ID of Topic
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Retrieved Topic Answers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  answers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Answer'
+  /answers/{answerId}:
+    delete:
+      summary: Delete Answer
+      operationId: deleteAnswer
+      parameters:
+        - name: answerId
+          in: path
+          required: true
+          description: ID of the answer
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Answer deleted
+      'post':
+        summary: Create Answer
+        operationId: createAnswer
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Answer'
+        responses:
+          '201':
+            description: Answer Posted
+          '400':
+            description: Bad Request
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+      required:
+        - username
+        - email
+        - password
+    Topic:
+      type: object
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+      required:
+        - title
+        - body
+    Answer:
+      type: object
+      properties:
+        body:
+          type: string
+      required:
+        - body
+    Vote:
+      type: object
+      properties:
+        voteType:
+          type: string
+          enum: [upvote, downvote]
+      required:
+        - voteType
