@@ -1,0 +1,181 @@
+{
+  "endpoints": [
+    {
+      "url": "/login",
+      "method": "POST",
+      "description": "Endpoint for user login.",
+      "request": {
+        "format": "JSON",
+        "parameters": [
+          {
+            "name": "email",
+            "type": "string",
+            "required": true,
+            "description": "User's email address."
+          },
+          {
+            "name": "password",
+            "type": "string",
+            "required": true,
+            "description": "User's password."
+          }
+        ]
+      },
+      "response": {
+        "format": "JSON",
+        "success_code": 201,
+        "success_response": {
+          "status": "Success"
+        },
+        "error_code": 403,
+        "error_response": {
+          "status": "Access denied"
+        }
+      }
+    },
+    {
+      "url": "/logout",
+      "method": "POST",
+      "description": "Endpoint for user logout.",
+      "response": {
+        "format": "JSON",
+        "success_code": 200,
+        "success_response": {
+          "message": "Logged out successfully"
+        },
+        "error_code": 400,
+        "error_response": {
+          "message": "No user logged in"
+        }
+      }
+    },
+    {
+      "url": "/topics",
+      "method": "POST",
+      "description": "Endpoint for creating a new topic.",
+      "request": {
+        "format": "JSON",
+        "parameters": [
+          {
+            "name": "user_id",
+            "type": "integer",
+            "required": true,
+            "description": "User ID of the topic creator."
+          },
+          {
+            "name": "topic_title",
+            "type": "string",
+            "required": true,
+            "description": "Title of the topic."
+          },
+          {
+            "name": "content",
+            "type": "string",
+            "required": true,
+            "description": "Content of the topic."
+          }
+        ]
+      },
+      "response": {
+        "format": "JSON",
+        "success_code": 201,
+        "success_response": {
+          "message": "Topic created"
+        }
+      }
+    },
+    {
+      "url": "/topics",
+      "method": "GET",
+      "description": "Endpoint for searching topics.",
+      "request": {
+        "format": "URL query parameter",
+        "parameters": [
+          {
+            "name": "q",
+            "type": "string",
+            "description": "Search query."
+          }
+        ]
+      },
+      "response": {
+        "format": "JSON",
+        "success_code": 200,
+        "success_response": {
+          "topics": "[List of topics matching the search query]"
+        }
+      }
+    },
+    {
+      "url": "/topics/<topic_id>",
+      "method": "DELETE",
+      "description": "Endpoint for deleting a topic.",
+      "response": {
+        "format": "JSON",
+        "success_code": 200,
+        "success_response": {
+          "message": "Topic deleted"
+        }
+      }
+    },
+    {
+      "url": "/answers",
+      "method": "POST",
+      "description": "Endpoint for creating a new answer.",
+      "request": {
+        "format": "JSON",
+        "parameters": [
+          {
+            "name": "user_id",
+            "type": "integer",
+            "required": true,
+            "description": "User ID of the answer creator."
+          },
+          {
+            "name": "topic_id",
+            "type": "integer",
+            "required": true,
+            "description": "ID of the topic for which the answer is created."
+          },
+          {
+            "name": "content",
+            "type": "string",
+            "required": true,
+            "description": "Content of the answer."
+          }
+        ]
+      },
+      "response": {
+        "format": "JSON",
+        "success_code": 201,
+        "success_response": {
+          "message": "Answer created"
+        }
+      }
+    },
+    {
+      "url": "/answers/<answer_id>",
+      "method": "GET",
+      "description": "Endpoint for retrieving an answer.",
+      "response": {
+        "format": "JSON",
+        "success_code": 200,
+        "success_response": {
+          "answers": "[List of answers for the specified topic ID]"
+        }
+      }
+    },
+    {
+      "url": "/answers/<answer_id>",
+      "method": "DELETE",
+      "description": "Endpoint for deleting an answer.",
+      "response": {
+        "format": "JSON",
+        "success_code": 200,
+        "success_response": {
+          "message": "Answer deleted"
+        }
+      }
+    }
+  ]
+}
