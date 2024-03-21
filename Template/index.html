@@ -167,7 +167,6 @@
         </div>
         <div class="buttons-container">
             <button class="button" onclick="toggleForm('loginForm')">Login</button>
-            <button class="button" onclick="toggleForm('signupForm')">Sign Up</button>
         </div>
     </div>
 
@@ -179,26 +178,6 @@
             <label for="login-psw">Password</label>
             <input type="password" placeholder="Enter Password" name="login-psw" required>
             <button type="submit">Login</button>
-        </form>
-    </div>
-
-    <div id="signupForm" class="form-container">
-        <form id="signupFormContent" onsubmit="return signUp()">
-            <h2>Sign Up</h2>
-            <label for="email">Email</label>
-            <input type="text" placeholder="Enter Email" name="email" required>
-            <label for="psw">Password</label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
-            <label for="psw-repeat">Repeat Password</label>
-            <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
-            <label>
-                <input type="checkbox" checked="checked" name="remember"> Remember me
-            </label>
-            <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
-            <div class="clearfix">
-                <button type="button" onclick="toggleForm('signupForm')" class="cancelbtn">Cancel</button>
-                <button type="submit" class="signupbtn">Sign Up</button>
-            </div>
         </form>
     </div>
 
@@ -263,54 +242,6 @@
                 currentFormId = formId;
             }
         }
-
-        <!-- Inside the <script> tag -->
-            function signUp() {
-    var email = document.getElementsByName("email")[0].value;
-    var password = document.getElementsByName("psw")[0].value;
-    var repeatPassword = document.getElementsByName("psw-repeat")[0].value;
-
-    // Perform client-side validation
-    if (password !== repeatPassword) {
-        alert("Passwords do not match. Please try again.");
-        return false; // Prevent form submission
-    }
-
-    // Construct form data
-    var formData = new FormData();
-    formData.append('email', email);
-    formData.append('password', password);
-
-    // Fetch request to the server
-    fetch("/signup.php", {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => {
-        if (response.ok) {
-            // Successful signup
-            console.log("Signup successful");
-            alert("Signup successful! You can now login.");
-            // Redirect to login page or display login form
-            // window.location.href = "/login";
-        } else {
-            // Failed signup
-            console.error("Failed to signup:", response.statusText);
-            alert("Failed to signup. Failed signup");
-        }
-    })
-    .catch(error => {
-        // Handle network errors
-        console.error("Error:", error);
-        alert("Failed to signup network error");
-    });
-
-    // Prevent form submission
-    return false;
-}
-
-
-
 
         function addTopic() {
             var topicInput = document.getElementById("topic").value;
