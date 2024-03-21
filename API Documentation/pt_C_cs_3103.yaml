@@ -174,11 +174,3 @@ components:
           type: string
       required:
         - body
-    Vote:
-      type: object
-      properties:
-        voteType:
-          type: string
-          enum: [upvote, downvote]
-      required:
-        - voteType
