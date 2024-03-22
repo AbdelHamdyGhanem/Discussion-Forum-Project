@@ -82,12 +82,18 @@ class Login(Resource):
 # Example curl command for testing Logout:
 # curl -i -X POST -b cookie-jar -k http://localhost:5000/logout
 class Logout(Resource):
-    def post(self):
-        if 'email' in session:
-            session.pop('email', None)
-            return jsonify({'message': 'Logged out successfully'}), 200
+    def get(self):
+        # Check if user is logged in
+        if 'username' in session:
+            # Clear the session
+            session.pop('username', None)
+            response = {'status': 'success', 'message': 'Logged out successfully'}
+            responseCode = 200
         else:
-            return jsonify({'message': 'No user logged in'}), 400
+            response = {'status': 'error', 'message': 'User is not logged in'}
+            responseCode = 400
+
+        return make_response(jsonify(response), responseCode)
 
 # Example curl command for post topic:
 # curl -i -H "Content-Type: application/json" -X POST -d '{"user_id": 1, "topic_title": "New Topic", "content": "Content of the new topic"}' -b cookie-jar -k http://localhost:5000/topics
