@@ -199,103 +199,50 @@
         document.body.classList.toggle('dark-mode');
         }
 
-        function login() {
-            var email = document.getElementById("login-email").value;
-            var password = document.getElementById("login-psw").value;
-
-            // AJAX request to the server
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/login");
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        // Successful login
-                        console.log("Login successful");
-                        alert("Login successful!");
-                        window.location.href = "/dashboard"; // Redirect to dashboard page
-                    } else {
-                        // Failed login
-                        console.error("Failed to login:", xhr.responseText);
-                        alert("Failed to login. Please check your credentials and try again.");
-                    }
+    // Function to submit login form data
+    function login() {
+        var email = document.getElementById('login-email').value;
+        var password = document.getElementById('login-psw').value;
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/login", true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // Login successful, handle response if needed
+                    alert('Login successful!');
+                } else {
+                    // Handle login failure
+                    alert('Login failed. Please try again.');
                 }
-            };
-            xhr.send(JSON.stringify({ email: email, password: password }));
-
-            // Prevent form submission
-            return false;
-        }
-
-        function toggleForm(formId) {
-            if (currentFormId === formId) {
-                // Close the form
-                document.getElementById(formId).style.display = "none";
-                currentFormId = null;
-            } else {
-                // Close the currently open form, if any
-                if (currentFormId !== null) {
-                    document.getElementById(currentFormId).style.display = "none";
-                }
-                // Open the selected form
-                document.getElementById(formId).style.display = "block";
-                currentFormId = formId;
             }
-        }
+        };
+        var data = JSON.stringify({ "username": email, "password": password });
+        xhr.send(data);
+        return false; // Prevent form submission
+    }
 
-        function addTopic() {
-            var topicInput = document.getElementById("topic").value;
-            console.log("Topic added:", topicInput);
-            
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/add_topic");
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        console.log("Topic added successfully.");
-                    } else {
-                        console.error("Failed to add topic:", xhr.responseText);
-                    }
+    // Function to submit create topic form data
+    function addTopic() {
+        var topicTitle = document.getElementById('topic').value;
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/topic", true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 201) {
+                    // Topic created successfully, handle response if needed
+                    alert('Topic created successfully!');
+                } else {
+                    // Handle topic creation failure
+                    alert('Failed to create topic. Please try again.');
                 }
-            };
-            xhr.send(JSON.stringify({ topic: topicInput }));
-            
-            return false; // Prevent form submission
-        }
-
-        function searchTopics() {
-            var searchInput = document.getElementById("search-input").value;
-            var searchResults = document.getElementById("search-results");
-
-            // Clear previous search results
-            searchResults.innerHTML = "";
-
-            if (searchInput.trim() !== "") {
-                // Send AJAX request to the server
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "/search_topics");
-                xhr.setRequestHeader("Content-Type", "application/json");
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === XMLHttpRequest.DONE) {
-                        if (xhr.status === 200) {
-                            var topics = JSON.parse(xhr.responseText);
-                            topics.forEach(function (topic) {
-                                var li = document.createElement("li");
-                                li.textContent = topic;
-                                searchResults.appendChild(li);
-                            });
-                        } else {
-                            console.error("Failed to search topics:", xhr.responseText);
-                        }
-                    }
-                };
-                xhr.send(JSON.stringify({ query: searchInput }));
             }
-        }
-
-
-
+        };
+        var data = JSON.stringify({ "topic_title": topicTitle, "content": "" }); // Adjust content if needed
+        xhr.send(data);
+        return false; // Prevent form submission
+    }
     </script>
 </body>
 </html>
