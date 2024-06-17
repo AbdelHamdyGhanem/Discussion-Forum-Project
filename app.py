@@ -36,6 +36,10 @@ def not_found(error):
 def not_found(error):
 	return make_response(jsonify( { 'status': 'Resource not found' } ), 404)
 
+class Root(Resource):
+	def get(self):
+		return app.send_static_file('test.html')
+
 # Example curl command for testing Login:
 # curl -i -H "Content-Type: application/json" -X POST -d '{"email": "example@example.com", "password": "example"}' -c cookie-jar -k http://localhost:5000/login
 class Login(Resource):
@@ -86,36 +90,23 @@ class Login(Resource):
 
         return make_response(jsonify(response), responseCode)
 
-# Example curl command for testing Logout:
-    #curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar -k https://cs3103.cs.unb.ca:8037/logout
-class Logout(Resource):
-<<<<<<< HEAD
-    def delete(self):
-=======
+	# curl -i -H "Content-Type: application/json" -X GET -b cookie-jar -k https://cs3103.cs.unb.ca:8037/login
+
     def get(self):
-        # Check if user is logged in
         if 'username' in session:
-            # Clear the session
-            session.pop('username', None)
-            response = {'status': 'success', 'message': 'Logged out successfully'}
+            username = session['username']
+            response = {'status': 'success'}
             responseCode = 200
         else:
-            response = {'status': 'error', 'message': 'User is not logged in'}
-            responseCode = 400
+            response = {'status': 'fail'}
+            responseCode = 403
 
         return make_response(jsonify(response), responseCode)
 
-# Example curl command for post topic:
-# curl -i -H "Content-Type: application/json" -X POST -d '{"user_id": 1, "topic_title": "New Topic", "content": "Content of the new topic"}' -b cookie-jar -k http://localhost:5000/topics
-
-# Example curl command for get topic:
-# curl -i -X GET -b cookie-jar -k http://localhost:5000/topics
-
-# Example curl command for delete topic:
-# curl -i -X DELETE -b cookie-jar -k http://localhost:5000/topics/1
-class Topic(Resource):
-    def post(self):
->>>>>>> 376e4afb8ee8f217ccd94ae60cfac65d7257db91
+# Example curl command for testing Logout:
+    #curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar -k https://cs3103.cs.unb.ca:8037/logout
+class Logout(Resource):
+    def delete(self):
         if 'username' in session:
             session.pop('username', None)
             response = {'status': 'success'}
@@ -262,6 +253,7 @@ class Answers(Resource):
 
 
 api = Api(app)
+api.add_resource(Root,'/')
 api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
 api.add_resource(Topic, '/topic')    
